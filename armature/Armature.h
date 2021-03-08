@@ -548,7 +548,7 @@ public:
     }
 
 public: // For WebAssembly.
-    IAnimatable* getAnimatable() const { return (IAnimatable*)this; }
+    IAnimatable* getAnimatable() { return dynamic_cast<IAnimatable*>(this); }
 };
 
 DRAGONBONES_NAMESPACE_END
