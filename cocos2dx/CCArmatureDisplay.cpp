@@ -44,19 +44,19 @@ void CCArmatureDisplay::dispose(bool disposeProxy)
 
 void CCArmatureDisplay::dbUpdate()
 {
-    const auto drawed = DragonBones::debugDraw;
-    if (drawed || _debugDraw) 
-    {
-        _debugDraw = drawed;
-        if (_debugDraw) 
-        {
-
-        }
-        else 
-        {
-            // TODO
-        }
-    }
+//    const auto drawed = DragonBones::debugDraw;
+//    if (drawed || _debugDraw)
+//    {
+//        _debugDraw = drawed;
+//        if (_debugDraw)
+//        {
+//
+//        }
+//        else
+//        {
+//            // TODO
+//        }
+//    }
 }
 
 void CCArmatureDisplay::addDBEventListener(const std::string& type, const std::function<void(EventObject*)>& callback)
@@ -118,6 +118,18 @@ cocos2d::Rect CCArmatureDisplay::getBoundingBox() const
     return cocos2d::RectApplyTransform(rect, getNodeToParentTransform());
 }
 
+void CCArmatureDisplay::setDebug(bool value) {
+    Node::setDebug(value);
+    if (!this->getArmature()) return;
+    for (auto item : getArmature()->getSlots()) {
+        if (auto slot = dynamic_cast<CCSlot*>(item)) {
+            if (auto sprite = dynamic_cast<DBCCSprite*>(slot->getCCDisplay())) {
+                sprite->setDebug(value);
+            }
+        }
+    }
+}
+
 DBCCSprite* DBCCSprite::create()
 {
     DBCCSprite* sprite = new (std::nothrow) DBCCSprite();
@@ -156,8 +168,8 @@ bool DBCCSprite::_checkVisibility(const cocos2d::Mat4& transform, const cocos2d:
     cocos2d::Vec2 v2p = cocos2d::Camera::getVisitingCamera()->projectGL(v3p);
 
     // convert content size to world coordinates
-    float wshw = std::max(fabsf(hSizeX * transform.m[0] + hSizeY * transform.m[4]), fabsf(hSizeX * transform.m[0] - hSizeY * transform.m[4]));
-    float wshh = std::max(fabsf(hSizeX * transform.m[1] + hSizeY * transform.m[5]), fabsf(hSizeX * transform.m[1] - hSizeY * transform.m[5]));
+    float wshw = std::max(fabsf(hSizeX * transform.m[0] + hSizeY * transform.m[4]), fabsf(hSizeX * transform.m[0] - hSizeY * transform.m[4])) * 3;
+    float wshh = std::max(fabsf(hSizeX * transform.m[1] + hSizeY * transform.m[5]), fabsf(hSizeX * transform.m[1] - hSizeY * transform.m[5])) * 3;
 
     // enlarge visible rect half size in screen coord
     visiableRect.origin.x -= wshw;
@@ -193,28 +205,31 @@ void DBCCSprite::draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transfor
     {
         _trianglesCommand.init(_globalZOrder, _texture, _blendFunc, _polyInfo.triangles, transform, flags);
         renderer->addCommand(&_trianglesCommand);
+#if DEBUG
+        if (isDebugDraw) {
+            _debugDrawNode->clear();
+            auto count = _polyInfo.triangles.indexCount / 3;
+            auto indices = _polyInfo.triangles.indices;
+            auto verts = _polyInfo.triangles.verts;
+            for (ssize_t i = 0; i < count; i++) {
+                // draw 3 lines
+                auto from = verts[indices[i * 3]].vertices;
+                auto to = verts[indices[i * 3 + 1]].vertices;
+                _debugDrawNode->drawLine(
+                    cocos2d::Vec2(from.x, from.y), cocos2d::Vec2(to.x, to.y), cocos2d::Color4F::WHITE);
 
-#if CC_SPRITE_DEBUG_DRAW
-        _debugDrawNode->clear();
-        auto count = _polyInfo.triangles.indexCount / 3;
-        auto indices = _polyInfo.triangles.indices;
-        auto verts = _polyInfo.triangles.verts;
-        for (ssize_t i = 0; i < count; i++)
-        {
-            //draw 3 lines
-            auto from = verts[indices[i * 3]].vertices;
-            auto to = verts[indices[i * 3 + 1]].vertices;
-            _debugDrawNode->drawLine(cocos2d::Vec2(from.x, from.y), cocos2d::Vec2(to.x, to.y), cocos2d::Color4F::WHITE);
+                from = verts[indices[i * 3 + 1]].vertices;
+                to = verts[indices[i * 3 + 2]].vertices;
+                _debugDrawNode->drawLine(
+                    cocos2d::Vec2(from.x, from.y), cocos2d::Vec2(to.x, to.y), cocos2d::Color4F::WHITE);
 
-            from = verts[indices[i * 3 + 1]].vertices;
-            to = verts[indices[i * 3 + 2]].vertices;
-            _debugDrawNode->drawLine(cocos2d::Vec2(from.x, from.y), cocos2d::Vec2(to.x, to.y), cocos2d::Color4F::WHITE);
-
-            from = verts[indices[i * 3 + 2]].vertices;
-            to = verts[indices[i * 3]].vertices;
-            _debugDrawNode->drawLine(cocos2d::Vec2(from.x, from.y), cocos2d::Vec2(to.x, to.y), cocos2d::Color4F::WHITE);
+                from = verts[indices[i * 3 + 2]].vertices;
+                to = verts[indices[i * 3]].vertices;
+                _debugDrawNode->drawLine(
+                    cocos2d::Vec2(from.x, from.y), cocos2d::Vec2(to.x, to.y), cocos2d::Color4F::WHITE);
+            }
         }
-#endif //CC_SPRITE_DEBUG_DRAW
+#endif //DEBUG
     }
 }
 

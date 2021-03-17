@@ -39,19 +39,12 @@ public:
      * @internal
      */
     static CCArmatureDisplay* create();
-public:
-    bool debugDraw;
-
 protected:
-    bool _debugDraw;
     Armature* _armature;
     cocos2d::EventDispatcher* _dispatcher;
 
 public:
     CCArmatureDisplay() :
-        debugDraw(false),
-
-        _debugDraw(false),
         _armature(nullptr),
         _dispatcher(nullptr)
     {
@@ -115,6 +108,8 @@ public:
     * @inheritDoc
     */
     virtual cocos2d::Rect getBoundingBox() const override;
+
+    virtual void setDebug(bool) override;
 };
 /**
  * @internal
