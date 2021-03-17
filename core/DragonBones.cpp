@@ -7,83 +7,83 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-const std::string DragonBones::VEISION = "5.6.300";
+    const std::string DragonBones::VEISION = "5.6.300";
 
-bool DragonBones::yDown = true;
-bool DragonBones::debug = false;
-bool DragonBones::debugDraw = false;
-bool DragonBones::webAssembly = false;
+    bool DragonBones::yDown = true;
+    bool DragonBones::debug = false;
+    bool DragonBones::debugDraw = false;
+    bool DragonBones::webAssembly = false;
 
-DragonBones::DragonBones(IEventDispatcher* eventManager) :
-    _objects(),
-    _events(),
-    _clock(nullptr),
-    _eventManager(eventManager)
-{
-    _clock = new WorldClock();
-    _eventManager = eventManager;
-}
-
-DragonBones::~DragonBones()
-{
-    if (_clock != nullptr)
+    DragonBones::DragonBones(IEventDispatcher* eventManager) :
+        _events(),
+        _objects(),
+        _clock(nullptr),
+        _eventManager(eventManager)
     {
-        delete _clock;
+        _clock = new WorldClock();
+        _eventManager = eventManager;
     }
 
-    _clock = nullptr;
-    _eventManager = nullptr;
-}
-void DragonBones::advanceTime(float passedTime)
-{
-    if (!_objects.empty())
+    DragonBones::~DragonBones()
     {
-        for (const auto object : _objects)
+        if (_clock != nullptr)
         {
-            object->returnToPool();
+            delete _clock;
         }
 
-        _objects.clear();
+        _clock = nullptr;
+        _eventManager = nullptr;
     }
-
-    if (!_events.empty())
+    void DragonBones::advanceTime(float passedTime)
     {
-        for (std::size_t i = 0; i < _events.size(); ++i)
+        if (!_objects.empty())
         {
-            const auto eventObject = _events[i];
-            const auto armature = eventObject->armature;
-            if (armature->_armatureData != nullptr)
+            for (const auto object : _objects)
             {
-                armature->getProxy()->dispatchDBEvent(eventObject->type, eventObject);
-                if (eventObject->type == EventObject::SOUND_EVENT)
-                {
-                    _eventManager->dispatchDBEvent(eventObject->type, eventObject);
-                }
+                object->returnToPool();
             }
 
-            bufferObject(eventObject);
+            _objects.clear();
         }
 
-        _events.clear();
+        if (!_events.empty())
+        {
+            for (std::size_t i = 0; i < _events.size(); ++i)
+            {
+                const auto eventObject = _events[i];
+                const auto armature = eventObject->armature;
+                if (armature->_armatureData != nullptr)
+                {
+                    armature->getProxy()->dispatchDBEvent(eventObject->type, eventObject);
+                    if (eventObject->type == EventObject::SOUND_EVENT)
+                    {
+                        _eventManager->dispatchDBEvent(eventObject->type, eventObject);
+                    }
+                }
+
+                bufferObject(eventObject);
+            }
+
+            _events.clear();
+        }
+
+        _clock->advanceTime(passedTime);
     }
 
-    _clock->advanceTime(passedTime);
-}
+    void DragonBones::bufferEvent(EventObject* value)
+    {
+        _events.push_back(value);
+    }
 
-void DragonBones::bufferEvent(EventObject* value)
-{
-    _events.push_back(value);
-}
+    void DragonBones::bufferObject(BaseObject* object)
+    {
+        _objects.push_back(object);
+    }
 
-void DragonBones::bufferObject(BaseObject* object)
-{
-    _objects.push_back(object);
-}
-
-WorldClock* DragonBones::getClock()
-{
-    return _clock;
-}
+    WorldClock* DragonBones::getClock()
+    {
+        return _clock;
+    }
 
 
 DRAGONBONES_NAMESPACE_END

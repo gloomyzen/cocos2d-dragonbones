@@ -37,112 +37,112 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class TextureAtlasData : public BaseObject
-{
-    ABSTRACT_CLASS(TextureAtlasData)
-
-public:
-    /**
-     * @private
-     */
-    bool autoSearch;
-    TextureFormat format;
-    /**
-     * @private
-     */
-    unsigned width;
-    /**
-     * @private
-     */
-    unsigned height;
-    /**
-     * @private
-     */
-    float scale;
-    /**
-     * - The texture atlas name.
-     * @version DragonBones 3.0
-     * @language en_US
-     */
-    /**
-     * - 贴图集名称。
-     * @version DragonBones 3.0
-     * @language zh_CN
-     */
-    std::string name;
-    /**
-     * - The image path of the texture atlas.
-     * @version DragonBones 3.0
-     * @language en_US
-     */
-    /**
-     * - 贴图集图片路径。
-     * @version DragonBones 3.0
-     * @language zh_CN
-     */
-    std::string imagePath;
-    /**
-     * @private
-     */
-    std::map<std::string, TextureData*> textures;
-    /**
-     * @private
-     */
-    void copyFrom(const TextureAtlasData& value);
-    /**
-     * @internal
-     */
-    virtual TextureData* createTexture() const = 0;
-    /**
-     * @internal
-     */
-    virtual void addTexture(TextureData* value);
-    /**
-     * @private
-     */
-    inline TextureData* getTexture(const std::string& textureName) const
+    class TextureAtlasData : public BaseObject
     {
-        return mapFind(textures, textureName);
-    }
+      ABSTRACT_CLASS(TextureAtlasData);
 
-protected:
-    virtual void _onClear() override;
+      public:
+        /**
+         * @private
+         */
+        bool autoSearch;
+        TextureFormat format;
+        /**
+         * @private
+         */
+        unsigned width;
+        /**
+         * @private
+         */
+        unsigned height;
+        /**
+         * @private
+         */
+        float scale;
+        /**
+         * - The texture atlas name.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 贴图集名称。
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        std::string name;
+        /**
+         * - The image path of the texture atlas.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 贴图集图片路径。
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        std::string imagePath;
+        /**
+         * @private
+         */
+        std::map<std::string, TextureData*> textures;
+        /**
+         * @private
+         */
+        void copyFrom(const TextureAtlasData& value);
+        /**
+         * @internal
+         */
+        virtual TextureData* createTexture() const = 0;
+        /**
+         * @internal
+         */
+        virtual void addTexture(TextureData* value);
+        /**
+         * @private
+         */
+        inline TextureData* getTexture(const std::string& textureName) const
+        {
+            return mapFind(textures, textureName);
+        }
 
-public: // For WebAssembly.
-    const std::map<std::string, TextureData*>& getTextures() const { return textures; }
-};
+      protected:
+        virtual void _onClear() override;
+
+      public: // For WebAssembly.
+        const std::map<std::string, TextureData*>& getTextures() const { return textures; }
+    };
 /**
  * @internal
  */
-class TextureData : public BaseObject
-{
-public:
-    static Rectangle* createRectangle();
+    class TextureData : public BaseObject
+    {
+      public:
+        static Rectangle* createRectangle();
 
-public:
-    bool rotated;
-    std::string name;
-    Rectangle region;
-    Rectangle* frame;
-    TextureAtlasData* parent;
+      public:
+        bool rotated;
+        std::string name;
+        Rectangle region;
+        Rectangle* frame;
+        TextureAtlasData* parent;
 
-    TextureData() :
-        frame(nullptr)
-    {}
-    virtual ~TextureData() = 0;
+        TextureData() :
+            frame(nullptr)
+        {}
+        virtual ~TextureData() = 0;
 
-    void copyFrom(const TextureData& value);
+        void copyFrom(const TextureData& value);
 
-protected:
-    virtual void _onClear() override;
+      protected:
+        virtual void _onClear() override;
 
-public: // For WebAssembly.
-    Rectangle* getRegion() { return &region; }
-    const Rectangle* getFrame() const { return frame; }
-    void setFrame(Rectangle* value) { frame = value; }
-    const TextureAtlasData* getParent() const { return parent; }
-    void setParent(TextureAtlasData* value) { parent = value; }
-};
+      public: // For WebAssembly.
+        Rectangle* getRegion() { return &region; }
+        const Rectangle* getFrame() const { return frame; }
+        void setFrame(Rectangle* value) { frame = value; }
+        const TextureAtlasData* getParent() const { return parent; }
+        void setParent(TextureAtlasData* value) { parent = value; }
+    };
 
 DRAGONBONES_NAMESPACE_END
 #endif // DRAGONBONES_TEXTUREATLAS_DATA_H

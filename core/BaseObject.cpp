@@ -1,121 +1,121 @@
 #include "BaseObject.h"
 DRAGONBONES_NAMESPACE_BEGIN
 
-unsigned BaseObject::_hashCode = 0;
-unsigned BaseObject::_defaultMaxCount = 3000;
-std::map<std::size_t, unsigned> BaseObject::_maxCountMap;
-std::map<std::size_t, std::vector<BaseObject*>> BaseObject::_poolsMap;
+    unsigned BaseObject::_hashCode = 0;
+    unsigned BaseObject::_defaultMaxCount = 3000;
+    std::map<std::size_t, unsigned> BaseObject::_maxCountMap;
+    std::map<std::size_t, std::vector<BaseObject*>> BaseObject::_poolsMap;
 
-void BaseObject::_returnObject(BaseObject* object)
-{
-    const auto classType = object->getClassTypeIndex();
-    const auto maxCountIterator = _maxCountMap.find(classType);
-    const auto maxCount = maxCountIterator != _maxCountMap.end() ? maxCountIterator->second : _defaultMaxCount;
-    auto& pool = _poolsMap[classType];
-    if (pool.size() < maxCount)
+    void BaseObject::_returnObject(BaseObject* object)
     {
-        if (!object->_isInPool)
+        const auto classType = object->getClassTypeIndex();
+        const auto maxCountIterator = _maxCountMap.find(classType);
+        const auto maxCount = maxCountIterator != _maxCountMap.end() ? maxCountIterator->second : _defaultMaxCount;
+        auto& pool = _poolsMap[classType];
+        if (pool.size() < maxCount)
         {
-            object->_isInPool = true;
-            pool.push_back(object);
+            if (!object->_isInPool)
+            {
+                object->_isInPool = true;
+                pool.push_back(object);
+            }
+            else
+            {
+                DRAGONBONES_ASSERT(false, "The object is already in the pool.");
+            }
         }
         else
         {
-            DRAGONBONES_ASSERT(false, "The object is already in the pool.");
+            delete object;
         }
     }
-    else
-    {
-        delete object;
-    }
-}
 
-void BaseObject::setMaxCount(std::size_t classType, unsigned maxCount)
-{
-    if (classType > 0)
+    void BaseObject::setMaxCount(std::size_t classType, unsigned maxCount)
     {
-        const auto iterator = _poolsMap.find(classType);
-        if (iterator != _poolsMap.end())
+        if (classType > 0)
         {
-            auto& pool = iterator->second;
-            if (pool.size() > static_cast<size_t>(maxCount))
+            const auto iterator = _poolsMap.find(classType);
+            if (iterator != _poolsMap.end())
             {
-                for (auto i = static_cast<size_t>(maxCount), l = pool.size(); i < l; ++i)
+                auto& pool = iterator->second;
+                if (pool.size() > (size_t)maxCount)
                 {
-                    delete pool[i];
+                    for (auto i = (size_t)maxCount, l = pool.size(); i < l; ++i)
+                    {
+                        delete pool[i];
+                    }
+
+                    pool.resize(maxCount);
+                }
+            }
+
+            _maxCountMap[classType] = maxCount;
+        }
+        else
+        {
+            _defaultMaxCount = maxCount;
+            for (auto& pair : _poolsMap)
+            {
+                auto& pool = pair.second;
+                if (pool.size() > (size_t)maxCount)
+                {
+                    for (auto i = (size_t)maxCount, l = pool.size(); i < l; ++i)
+                    {
+                        delete pool[i];
+                    }
+
+                    pool.resize(maxCount);
                 }
 
-                pool.resize(maxCount);
-            }
-        }
-
-        _maxCountMap[classType] = maxCount;
-    }
-    else
-    {
-        _defaultMaxCount = maxCount;
-        for (auto& pair : _poolsMap)
-        {
-            auto& pool = pair.second;
-            if (pool.size() > static_cast<size_t>(maxCount))
-            {
-                for (auto i = static_cast<size_t>(maxCount), l = pool.size(); i < l; ++i)
+                if (_maxCountMap.find(pair.first) != _maxCountMap.end())
                 {
-                    delete pool[i];
+                    _maxCountMap[pair.first] = maxCount;
                 }
-
-                pool.resize(maxCount);
-            }
-
-            if (_maxCountMap.find(pair.first) != _maxCountMap.end())
-            {
-                _maxCountMap[pair.first] = maxCount;
             }
         }
     }
-}
 
-void BaseObject::clearPool(std::size_t classType)
-{
-    if (classType > 0)
+    void BaseObject::clearPool(std::size_t classType)
     {
-        const auto iterator = _poolsMap.find(classType);
-        if (iterator != _poolsMap.end())
+        if (classType > 0)
         {
-            auto& pool = iterator->second;
-            if (!pool.empty())
+            const auto iterator = _poolsMap.find(classType);
+            if (iterator != _poolsMap.end())
             {
-                for (auto object : pool)
+                auto& pool = iterator->second;
+                if (!pool.empty())
                 {
-                    delete object;
-                }
+                    for (auto object : pool)
+                    {
+                        delete object;
+                    }
 
-                pool.clear();
+                    pool.clear();
+                }
+            }
+        }
+        else
+        {
+            for (auto& pair : _poolsMap)
+            {
+                auto& pool = pair.second;
+                if (!pool.empty())
+                {
+                    for (auto object : pool)
+                    {
+                        delete object;
+                    }
+
+                    pool.clear();
+                }
             }
         }
     }
-    else
+
+    void BaseObject::returnToPool()
     {
-        for (auto& pair : _poolsMap)
-        {
-            auto& pool = pair.second;
-            if (!pool.empty())
-            {
-                for (auto object : pool)
-                {
-                    delete object;
-                }
-
-                pool.clear();
-            }
-        }
+        _onClear();
+        BaseObject::_returnObject(this);
     }
-}
-
-void BaseObject::returnToPool()
-{
-    _onClear();
-    BaseObject::_returnObject(this);
-}
 
 DRAGONBONES_NAMESPACE_END

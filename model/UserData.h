@@ -36,140 +36,140 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 5.0
  * @language zh_CN
  */
-class UserData : public BaseObject
-{
-    BIND_CLASS_TYPE_A(UserData);
+    class UserData : public BaseObject
+    {
+      BIND_CLASS_TYPE_A(UserData);
 
-public:
-    /**
-     * - The custom int numbers.
-     * @version DragonBones 5.0
-     * @language en_US
-     */
-    /**
-     * - 自定义整数。
-     * @version DragonBones 5.0
-     * @language zh_CN
-     */
-    std::vector<int> ints;
-    /**
-     * - The custom float numbers.
-     * @version DragonBones 5.0
-     * @language en_US
-     */
-    /**
-     * - 自定义浮点数。
-     * @version DragonBones 5.0
-     * @language zh_CN
-     */
-    std::vector<float> floats;
-    /**
-     * - The custom strings.
-     * @version DragonBones 5.0
-     * @language en_US
-     */
-    /**
-     * - 自定义字符串。
-     * @version DragonBones 5.0
-     * @language zh_CN
-     */
-    std::vector<std::string> strings;
+      public:
+        /**
+         * - The custom int numbers.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 自定义整数。
+         * @version DragonBones 5.0
+         * @language zh_CN
+         */
+        std::vector<int> ints;
+        /**
+         * - The custom float numbers.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 自定义浮点数。
+         * @version DragonBones 5.0
+         * @language zh_CN
+         */
+        std::vector<float> floats;
+        /**
+         * - The custom strings.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 自定义字符串。
+         * @version DragonBones 5.0
+         * @language zh_CN
+         */
+        std::vector<std::string> strings;
 
-protected:
-    virtual void _onClear() override;
+      protected:
+        virtual void _onClear() override;
 
-public:
-    /**
-     * @internal
-     */
-    void addInt(int value);
-    /**
-     * @internal
-     */
-    void addFloat(float value);
-    /**
-     * @internal
-     */
-    void addString(std::string value);
-    /**
-     * - Get the custom int number.
-     * @version DragonBones 5.0
-     * @language en_US
-     */
-    /**
-     * - 获取自定义整数。
-     * @version DragonBones 5.0
-     * @language zh_CN
-     */
-    int getInt(unsigned index) const;
-    /**
-     * - Get the custom float number.
-     * @version DragonBones 5.0
-     * @language en_US
-     */
-    /**
-     * - 获取自定义浮点数。
-     * @version DragonBones 5.0
-     * @language zh_CN
-     */
-    float getFloat(unsigned index) const;
-    /**
-     * - Get the custom string.
-     * @version DragonBones 5.0
-     * @language en_US
-     */
-    /**
-     * - 获取自定义字符串。
-     * @version DragonBones 5.0
-     * @language zh_CN
-     */
-    std::string getString(unsigned index) const;
+      public:
+        /**
+         * @internal
+         */
+        void addInt(int value);
+        /**
+         * @internal
+         */
+        void addFloat(float value);
+        /**
+         * @internal
+         */
+        void addString(std::string value);
+        /**
+         * - Get the custom int number.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 获取自定义整数。
+         * @version DragonBones 5.0
+         * @language zh_CN
+         */
+        int getInt(unsigned index) const;
+        /**
+         * - Get the custom float number.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 获取自定义浮点数。
+         * @version DragonBones 5.0
+         * @language zh_CN
+         */
+        float getFloat(unsigned index) const;
+        /**
+         * - Get the custom string.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 获取自定义字符串。
+         * @version DragonBones 5.0
+         * @language zh_CN
+         */
+        std::string getString(unsigned index) const;
 
-public: // For WebAssembly.
-    const std::vector<int>& getInts() const { return ints; }
-    const std::vector<float>& getFloats() const { return floats; }
-    const std::vector<std::string>& getStrings() const { return strings; }
-};
+      public: // For WebAssembly.
+        const std::vector<int>& getInts() const { return ints; }
+        const std::vector<float>& getFloats() const { return floats; }
+        const std::vector<std::string>& getStrings() const { return strings; }
+    };
 /**
  * @internal
  */
-class ActionData : public BaseObject
-{
-    BIND_CLASS_TYPE_B(ActionData);
-
-public:
-    ActionType type;
-    std::string name;
-    const BoneData* bone;
-    const SlotData* slot;
-    UserData* data;
-
-    ActionData() :
-        data(nullptr)
+    class ActionData : public BaseObject
     {
-        _onClear();
-    }
-    virtual ~ActionData()
-    {
-        _onClear();
-    }
+      BIND_CLASS_TYPE_B(ActionData);
 
-protected:
-    virtual void _onClear() override;
+      public:
+        ActionType type;
+        std::string name;
+        const BoneData* bone;
+        const SlotData* slot;
+        UserData* data;
 
-public: // For WebAssembly.
-    int getType() const { return static_cast<int>(type); }
-    void setType(int value) { type = static_cast<ActionType>(value); }
+        ActionData() :
+            data(nullptr)
+        {
+            _onClear();
+        }
+        virtual ~ActionData()
+        {
+            _onClear();
+        }
 
-    const BoneData* getBone() const { return bone; }
-    void setBone(const BoneData* value) { bone = value; }
+      protected:
+        virtual void _onClear() override;
 
-    const SlotData* getSlot() const { return slot; }
-    void setSlot(const SlotData* value) { slot = value; }
+      public: // For WebAssembly.
+        int getType() const { return (int)type; }
+        void setType(int value) { type = (ActionType)value; }
 
-    const UserData* getData() const { return data; }
-    void setData(UserData* value) { data = value; }
-};
+        const BoneData* getBone() const { return bone; }
+        void setBone(const BoneData* value) { bone = value; }
+
+        const SlotData* getSlot() const { return slot; }
+        void setSlot(const SlotData* value) { slot = value; }
+
+        const UserData* getData() const { return data; }
+        void setData(UserData* value) { data = value; }
+    };
 
 DRAGONBONES_NAMESPACE_END
 #endif // DRAGONBONES_USER_DATA_H

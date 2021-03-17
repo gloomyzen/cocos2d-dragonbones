@@ -39,69 +39,69 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 5.0
  * @language zh_CN
  */
-class IArmatureProxy : public IEventDispatcher
-{
-    ABSTRACT_CLASS(IArmatureProxy)
+    class IArmatureProxy : public IEventDispatcher
+    {
+      ABSTRACT_CLASS(IArmatureProxy);
 
-public:
-    /**
-     * @internal
-     */
-    virtual void dbInit(Armature* armature) = 0;
-    /**
-     * @internal
-     */
-    virtual void dbClear() = 0;
-    /**
-     * @internal
-     */
-    virtual void dbUpdate() = 0;
-    /**
-     * - Dispose the instance and the Armature instance. (The Armature instance will return to the object pool)
-     * @example
-     * TypeScript style, for reference only.
-     * <pre>
-     *     removeChild(armatureDisplay);
-     *     armatureDisplay.dispose();
-     * </pre>
-     * @version DragonBones 4.5
-     * @language en_US
-     */
-    /**
-     * - 释放该实例和骨架。 （骨架会回收到对象池）
-     * @example
-     * TypeScript 风格，仅供参考。
-     * <pre>
-     *     removeChild(armatureDisplay);
-     *     armatureDisplay.dispose();
-     * </pre>
-     * @version DragonBones 4.5
-     * @language zh_CN
-     */
-    virtual void dispose(bool disposeProxy) = 0;
-    /**
-     * - The armature.
-     * @version DragonBones 4.5
-     * @language en_US
-     */
-    /**
-     * - 骨架。
-     * @version DragonBones 4.5
-     * @language zh_CN
-     */
-    virtual Armature* getArmature() const = 0;
-    /**
-     * - The animation player.
-     * @version DragonBones 3.0
-     * @language en_US
-     */
-    /**
-     * - 动画播放器。
-     * @version DragonBones 3.0
-     * @language zh_CN
-     */
-    virtual Animation* getAnimation() const = 0;
-};
+      public:
+        /**
+         * @internal
+         */
+        virtual void dbInit(Armature* armature) = 0;
+        /**
+         * @internal
+         */
+        virtual void dbClear() = 0;
+        /**
+         * @internal
+         */
+        virtual void dbUpdate() = 0;
+        /**
+         * - Dispose the instance and the Armature instance. (The Armature instance will return to the object pool)
+         * @example
+         * TypeScript style, for reference only.
+         * <pre>
+         *     removeChild(armatureDisplay);
+         *     armatureDisplay.dispose();
+         * </pre>
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 释放该实例和骨架。 （骨架会回收到对象池）
+         * @example
+         * TypeScript 风格，仅供参考。
+         * <pre>
+         *     removeChild(armatureDisplay);
+         *     armatureDisplay.dispose();
+         * </pre>
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        virtual void dispose(bool disposeProxy) = 0;
+        /**
+         * - The armature.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 骨架。
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        virtual Armature* getArmature() const = 0;
+        /**
+         * - The animation player.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 动画播放器。
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        virtual Animation* getAnimation() const = 0;
+    };
 
 DRAGONBONES_NAMESPACE_END
 #endif // DRAGONBONES_IARMATURE_PROXY_H
