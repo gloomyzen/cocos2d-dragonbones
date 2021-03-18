@@ -1,6 +1,7 @@
 #include "CCSlot.h"
 #include "CCTextureAtlasData.h"
 #include "CCArmatureDisplay.h"
+#include "renderer/backend/Types.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 

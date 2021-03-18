@@ -7,7 +7,6 @@ CCArmatureDisplay* CCArmatureDisplay::create()
 {
     CCArmatureDisplay* displayContainer = new (std::nothrow) CCArmatureDisplay();
     if (displayContainer && displayContainer->init())
-    if (displayContainer)
     {
         displayContainer->autorelease();
     }
@@ -29,13 +28,13 @@ void CCArmatureDisplay::dbClear()
     setEventDispatcher(cocos2d::Director::getInstance()->getEventDispatcher());
 
     _armature = nullptr;
-    CC_SAFE_RELEASE(_dispatcher);
+    CC_SAFE_RELEASE_NULL(_dispatcher);
     release();
 }
 
 void CCArmatureDisplay::dispose(bool disposeProxy)
 {
-    if (_armature != nullptr) 
+    if (_armature != nullptr)
     {
         _armature->dispose();
         _armature = nullptr;
@@ -45,23 +44,15 @@ void CCArmatureDisplay::dispose(bool disposeProxy)
 void CCArmatureDisplay::dbUpdate()
 {
 //    const auto drawed = DragonBones::debugDraw;
-//    if (drawed || _debugDraw)
+//    if (drawed)
 //    {
-//        _debugDraw = drawed;
-//        if (_debugDraw)
-//        {
-//
-//        }
-//        else
-//        {
-//            // TODO
-//        }
+//         //TODO
 //    }
 }
 
 void CCArmatureDisplay::addDBEventListener(const std::string& type, const std::function<void(EventObject*)>& callback)
 {
-    auto lambda = [callback](cocos2d::EventCustom* event) -> void 
+    auto lambda = [callback](cocos2d::EventCustom* event) -> void
     {
         callback(static_cast<EventObject*>(event->getUserData()));
     };
@@ -90,7 +81,7 @@ cocos2d::Rect CCArmatureDisplay::getBoundingBox() const
     for (const auto slot : _armature->getSlots())
     {
         if (!slot->getVisible() || !slot->getDisplay())
-        { 
+        {
             continue;
         }
         

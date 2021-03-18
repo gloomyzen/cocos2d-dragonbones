@@ -39,6 +39,7 @@ public:
      * @internal
      */
     static CCArmatureDisplay* create();
+
 protected:
     Armature* _armature;
     cocos2d::EventDispatcher* _dispatcher;
@@ -50,7 +51,7 @@ public:
     {
         _dispatcher = new cocos2d::EventDispatcher();
         setEventDispatcher(_dispatcher);
-        // _dispatcher->setEnabled(true);
+        _dispatcher->setEnabled(true);
     }
     virtual ~CCArmatureDisplay() {}
 
