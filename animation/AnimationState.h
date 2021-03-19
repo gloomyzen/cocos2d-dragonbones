@@ -25,6 +25,7 @@
 
 #include "../core/BaseObject.h"
 #include "../geom/Transform.h"
+#include <functional>
 
 DRAGONBONES_NAMESPACE_BEGIN
 /**
@@ -61,6 +62,8 @@ public:
      * @private
      */
     bool additiveBlending;
+    std::function<void()> onOnePlayEnded = nullptr;
+    std::function<void()> onAllPlayEnded = nullptr;
     /**
      * - Whether the animation state has control over the display object properties of the slots.
      * Sometimes blend a animation state does not want it to control the display object properties of the slots,

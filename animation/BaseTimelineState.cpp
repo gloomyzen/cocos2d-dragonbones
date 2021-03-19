@@ -79,6 +79,8 @@ DRAGONBONES_NAMESPACE_BEGIN
                 }
                 else
                 {
+                    if (currentPlayTimes >= playTimes && _animationState->onAllPlayEnded != nullptr) _animationState->onAllPlayEnded();
+                    if (_animationState->onOnePlayEnded != nullptr) _animationState->onOnePlayEnded();
                     currentTime = _duration + 0.000001f; // Precision problem
                 }
             }
