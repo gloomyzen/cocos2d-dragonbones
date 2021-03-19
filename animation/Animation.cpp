@@ -6,6 +6,7 @@
 #include "../armature/Bone.h"
 #include "../armature/Slot.h"
 #include "AnimationState.h"
+#include "cocos2d.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 
@@ -237,13 +238,8 @@ DRAGONBONES_NAMESPACE_BEGIN
         const auto& animationName = animationConfig->animation;
         if (_animations.find(animationName) == _animations.end())
         {
-            DRAGONBONES_ASSERT(
-                false,
-                "Non-existent animation.\n" +
-                " DragonBones name: " + this->_armature->getArmatureData().parent->name +
-                " Armature name: " + this->_armature->name +
-                " Animation name: " + animationName
-            );
+
+            CCLOG("Non-existent animation. DragonBones name: %s, Armature name: %s, Animation name: %s", this->_armature->getArmatureData()->name.c_str(), this->_armature->getName().c_str(), animationName.c_str());
 
             return nullptr;
         }
