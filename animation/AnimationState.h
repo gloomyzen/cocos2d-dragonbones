@@ -62,8 +62,6 @@ public:
      * @private
      */
     bool additiveBlending;
-    std::function<void()> onOnePlayEnded = nullptr;
-    std::function<void()> onAllPlayEnded = nullptr;
     /**
      * - Whether the animation state has control over the display object properties of the slots.
      * Sometimes blend a animation state does not want it to control the display object properties of the slots,
