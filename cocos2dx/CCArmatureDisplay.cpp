@@ -1,5 +1,6 @@
 #include "CCArmatureDisplay.h"
 #include "CCSlot.h"
+#include "cocos2d.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 
@@ -158,9 +159,13 @@ bool DBCCSprite::_checkVisibility(const cocos2d::Mat4& transform, const cocos2d:
     transform.transformPoint(&v3p);
     cocos2d::Vec2 v2p = cocos2d::Camera::getVisitingCamera()->projectGL(v3p);
 
+    float coeff = 2.f;
+    if (cocos2d::Director::getInstance()->getProjection() == cocos2d::Director::Projection::_3D) {
+        coeff = 4.f;
+    }
     // convert content size to world coordinates
-    float wshw = std::max(fabsf(hSizeX * transform.m[0] + hSizeY * transform.m[4]), fabsf(hSizeX * transform.m[0] - hSizeY * transform.m[4])) * 3;
-    float wshh = std::max(fabsf(hSizeX * transform.m[1] + hSizeY * transform.m[5]), fabsf(hSizeX * transform.m[1] - hSizeY * transform.m[5])) * 3;
+    float wshw = std::max(fabsf(hSizeX * transform.m[0] + hSizeY * transform.m[4]), fabsf(hSizeX * transform.m[0] - hSizeY * transform.m[4])) * coeff;
+    float wshh = std::max(fabsf(hSizeX * transform.m[1] + hSizeY * transform.m[5]), fabsf(hSizeX * transform.m[1] - hSizeY * transform.m[5])) * coeff;
 
     // enlarge visible rect half size in screen coord
     visiableRect.origin.x -= wshw;
